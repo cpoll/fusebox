@@ -1,0 +1,9 @@
+config:
+    STACK_NAME: 'fusebox'
+    AWS_REGION_NAME: 'us-east-1'
+    CF_TEMPLATE_BUCKET: 'cloudformation-templates-h2vf91g7'
+    DOMAIN_NAME: 'fusebox.cristianpoll.com'
+    FUSEBOX_AMI: 'asd'
+    FUSEBOX_SSH_KEY_NAME: 'asd'
+    FUSEBOX_VPC_CIDR_BLOCK: '10.0.0.0/16'
+    STORAGE_BUCKER_NAME: fusebox-storage-bucket

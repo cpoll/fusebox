@@ -8,3 +8,5 @@
 	- Limited access user/pass account
 	- Sync scripts for limited access <-> FUSE drive
 
+- Cleanup
+	- Move utils into util repo
