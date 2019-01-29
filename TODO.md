@@ -3,6 +3,7 @@
 	- Versioned S3
 	- S3 size/cost monitoring (email alert?)
 - Ansible
+	- https://www.ansible.com/blog/dynamic-inventory-past-present-future
 	- Public key
 	- FUSE
 	- Limited access user/pass account

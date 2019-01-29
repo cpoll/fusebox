@@ -1,2 +1,3 @@
 __pycache__/
 .vscode/
+ansible/ec2.py

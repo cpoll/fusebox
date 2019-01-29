@@ -1,0 +1,9 @@
+
+
+---
+- hosts:
+    - tag_InstanceResponsibility_Fusebox
+  user: ec2-user
+  tasks:
+    - name: echo
+      shell: echo 'hello world'
