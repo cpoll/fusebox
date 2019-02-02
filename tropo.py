@@ -25,6 +25,7 @@ t.add_version('2010-09-09')
 ###
 shared_tags_args = {
     'Stack': CONFIG['STACK_NAME'],
+    'StackType': 'Fusebox',
 }
 
 
@@ -82,8 +83,6 @@ t.add_resource(ec2.SubnetRouteTableAssociation(
 
 # ACL Omitted
 
-
-
 ###
 # EC2 Instance
 ###
@@ -118,31 +117,41 @@ FuseboxSecurityGroup = t.add_resource(ec2.SecurityGroup(
     VpcId=Ref(FuseboxVPC),
     Tags=Tags(shared_tags_args),
 ))
-# t.add_resource(ec2.SecurityGroupIngress(
-#     'FuseboxSecurityGroupIngressSSHPorts',
-#     GroupId=Ref(FuseboxSecurityGroup),
-#     CidrIp=CONFIG['FUSEBOX_INBOUND_IP'],
-#     IpProtocol='tcp',
-#     FromPort=22,
-#     ToPort=22,
-#     DependsOn=[FuseboxSecurityGroup],
-# ))
+t.add_resource(ec2.SecurityGroupIngress(
+    'FuseboxSecurityGroupIngressSSHPorts',
+    GroupId=Ref(FuseboxSecurityGroup),
+    CidrIp=CONFIG['FUSEBOX_INBOUND_IP'],
+    IpProtocol='tcp',
+    FromPort=22,
+    ToPort=22,
+    DependsOn=[FuseboxSecurityGroup],
+))
 
 FuseboxEC2Instance = t.add_resource(ec2.Instance(
     'FuseboxInstance',
     AvailabilityZone=CONFIG['VPC_SUBNET_AZ'],
     SubnetId=Ref(FuseboxVPCSubnet),
-    # BlockDeviceMappings= TODO? Or just S3 + ephemeral,
-    # CreditSpecification=,
+    BlockDeviceMappings=[
+        ec2.BlockDeviceMapping(
+            DeviceName='/dev/sdb',
+            Ebs=ec2.EBSBlockDevice(
+                DeleteOnTermination=False,
+                Encrypted=True,
+                VolumeSize=10,
+                VolumeType='gp2'
+            )
+        ),
+    ],
+    CreditSpecification=ec2.CreditSpecification(CPUCredits='standard'),
     DisableApiTermination=True,
     EbsOptimized=False,
     IamInstanceProfile=Ref(FuseboxInstanceProfile),
     ImageId=CONFIG['FUSEBOX_AMI'],
     InstanceInitiatedShutdownBehavior='stop',
-    InstanceType='t2.micro',
+    InstanceType='t3.micro',
     KeyName=CONFIG['FUSEBOX_SSH_KEY_NAME'],
     # LaunchTemplate=,
-    Monitoring=False,  # No detailed monitoring
+    Monitoring=False,
     SecurityGroupIds=[GetAtt(FuseboxSecurityGroup, 'GroupId')],
     SourceDestCheck=True,
     Tenancy='default',

@@ -2,8 +2,10 @@ config:
     STACK_NAME: 'fusebox'
     AWS_REGION_NAME: 'us-east-1'
     CF_TEMPLATE_BUCKET: 'cloudformation-templates-h2vf91g7'
+
     DOMAIN_NAME: 'fusebox.cristianpoll.com'
-    FUSEBOX_AMI: 'asd'
-    FUSEBOX_SSH_KEY_NAME: 'asd'
+    FUSEBOX_AMI: 'ami-0ac019f4fcb7cb7e6'  # Ubuntu Server 18.04 LTS (HVM), SSD Volume Type
+    FUSEBOX_SSH_KEY_NAME: 'fusebox'
     FUSEBOX_VPC_CIDR_BLOCK: '10.0.0.0/16'
+    FUSEBOX_INBOUND_IP: '0.0.0.0/0'
     STORAGE_BUCKER_NAME: fusebox-storage-bucket
