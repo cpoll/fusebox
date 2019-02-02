@@ -7,5 +7,6 @@ config:
     FUSEBOX_AMI: 'ami-0ac019f4fcb7cb7e6'  # Ubuntu Server 18.04 LTS (HVM), SSD Volume Type
     FUSEBOX_SSH_KEY_NAME: 'fusebox'
     FUSEBOX_VPC_CIDR_BLOCK: '10.0.0.0/16'
+    VPC_SUBNET_AZ: 'us-east-1a'
     FUSEBOX_INBOUND_IP: '0.0.0.0/0'
-    STORAGE_BUCKER_NAME: fusebox-storage-bucket
+    STORAGE_BUCKET_NAME: fusebox-storage-bucket

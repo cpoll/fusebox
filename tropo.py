@@ -231,7 +231,7 @@ t.add_resource(s3.BucketPolicy(
 # Outputs
 ###
 t.add_output(Output(
-    'Fusebox url',
+    'FuseboxUrl',
     Description='Fusebox url',
     Value=CONFIG["DOMAIN_NAME"]
 ))
