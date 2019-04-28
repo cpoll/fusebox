@@ -1,0 +1,7 @@
+---
+
+# SSH user settings (used by ssh-users role)
+admin_list:
+  - username: "crisp"
+    active_keys:
+      - "ssh-rsa TODO cristian@cristianpoll.com"

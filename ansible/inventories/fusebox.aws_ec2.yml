@@ -1,0 +1,12 @@
+plugin: aws_ec2
+# boto_profile: main
+filters:
+  tag:StackType: fusebox
+regions:
+  - us-east-1
+hostnames:
+  - tag:Name  # Note: Duplicates overwrite
+strict_permissions: yes
+keyed_groups:
+  - prefix: Tags_StackType
+    key: tags.StackType

@@ -2,10 +2,9 @@
 	- EC2
 	- Versioned S3
 	- S3 size/cost monitoring (email alert?)
+
 - Ansible
-	- https://www.ansible.com/blog/dynamic-inventory-past-present-future
-	- Public key
-	- FUSE
+	- Fusebox role
 	- Limited access user/pass account
 	- Sync scripts for limited access <-> FUSE drive
 

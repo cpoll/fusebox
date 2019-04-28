@@ -1,0 +1,75 @@
+# Ansible script to add users
+# Modified from: https://keksi.io/tutorials/2016/12/05/how-to-manage-remote-server-users-with-ansible/
+#
+# To use, specify `admin_list` and `remove_admins` parameters for all hosts being used, e.g.:
+#
+# admin_list:
+#   - username: "crisp"
+#     active_keys:
+#       - "ssh-rsa AAAA111... cristian@cristianpoll.com"
+#     disabled_keys:
+#       - "ssh-rsa AAAA222... cristian@revoked-machine"
+# remove_admins:
+#   - username: "removed.person"
+
+---
+- name: Add users
+  become: true
+  user:
+    name: "{{ item.username }}"
+    state: "present"
+    shell: "{{ item.shell | default('/bin/bash') }}"
+    group: "{{ item.group | default(ssh_admin_group) }}"
+  when: item.username is defined and ( item.restriction | default(True) )
+  with_items:
+    - "{{ admin_list }}"
+
+- name: Add SSH-keys to users
+  become: true
+  authorized_key:
+    user: "{{ item.0.username }}"
+    key: "{{ item.1 }}"
+  when: item.0.username is defined and ( item.0.restriction | default(True) )
+  with_subelements:
+    - "{{ admin_list }}"
+    - active_keys
+    - flags:
+      skip_missing: True
+
+- name: Remove users
+  become: true
+  user:
+    name: "{{ item.username }}"
+    state: "absent"
+    shell: "{{ item.shell | default('/bin/bash') }}"
+    remove: yes
+  when: item.username is defined
+  with_items:
+    - "{{ remove_admins | default([]) }}"
+
+- name: Remove old SSH-keys from users
+  become: true
+  authorized_key:
+    user: "{{ item.0.username }}"
+    key: "{{ item.1 }}"
+    state: absent
+  when: item.0.username is defined and ( item.0.restriction | default(True) )
+  with_subelements:
+    - "{{ admin_list }}"
+    - disabled_keys
+    - flags:
+      skip_missing: True
+
+- name: Add admin group to sudoers
+  become: true
+  lineinfile:
+    path: /etc/sudoers
+    regexp: "^%{{ ssh_admin_group }}"
+    line: "%{{ ssh_admin_group }} ALL=(ALL) NOPASSWD:ALL"
+
+- name: Disable Requiretty for sudoers
+  become: true
+  lineinfile:
+    path: /etc/sudoers
+    regexp: "Defaults    requiretty"
+    line: "# Defaults    requiretty"
