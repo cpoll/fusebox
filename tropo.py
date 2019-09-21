@@ -24,8 +24,8 @@ t.add_version('2010-09-09')
 # Shared Tags
 ###
 shared_tags_args = {
-    'Stack': CONFIG['STACK_NAME'],
-    'StackType': 'Fusebox',
+    'StackName': CONFIG['STACK_NAME'],
+    'StackType': 'fusebox',
 }
 
 

@@ -1,6 +1,6 @@
 config:
     STACK_NAME: 'fusebox'
-    AWS_REGION_NAME: 'us-east-1'
+    AWS_REGION_NAME: 'ca-central-1'
     CF_TEMPLATE_BUCKET: 'cloudformation-templates-h2vf91g7'
 
     HOSTED_ZONE_ID: 'Z1LCBFBEJZB02Q'

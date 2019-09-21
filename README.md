@@ -6,9 +6,8 @@ Remote workspace w/ AWS EC2 and an S3-FUSE storage drive.
 
 - Run tropo.py
 
-- Test dynamic inventory
-    - EC2_INI_PATH=./ansible/ec2.ini ansible -m ping tag_InstanceResponsibility_Fusebox
-
 - Run Ansible
     - ssh add [FUSEBOX_SSH_KEY]
-    - ansible-playbook -i inventories/fusebox.aws_ec2.py -e "ansible_ssh_user=ubuntu" fusebox.yml
+    - ANSIBLE_USER=ubuntu ansible-playbook -i inventories/fusebox.aws_ec2.py fusebox.yml
+
+- Every other time, run ansible using the user specified in inventories/group_vars/all.yml
