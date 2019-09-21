@@ -1,4 +1,4 @@
 - name: Add SSH Users
-  hosts: Tags_StackType_Fusebox
+  hosts: Tags_StackType_fusebox
   roles:
     - ssh_users
