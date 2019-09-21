@@ -124,7 +124,6 @@ t.add_resource(ec2.SecurityGroupIngress(
     IpProtocol='tcp',
     FromPort=22,
     ToPort=22,
-    DependsOn=[FuseboxSecurityGroup],
 ))
 
 FuseboxEC2Instance = t.add_resource(ec2.Instance(
@@ -133,7 +132,7 @@ FuseboxEC2Instance = t.add_resource(ec2.Instance(
     SubnetId=Ref(FuseboxVPCSubnet),
     BlockDeviceMappings=[
         ec2.BlockDeviceMapping(
-            DeviceName='/dev/sdb',
+            DeviceName='/dev/sda1',
             Ebs=ec2.EBSBlockDevice(
                 DeleteOnTermination=False,
                 Encrypted=True,
@@ -148,7 +147,7 @@ FuseboxEC2Instance = t.add_resource(ec2.Instance(
     IamInstanceProfile=Ref(FuseboxInstanceProfile),
     ImageId=CONFIG['FUSEBOX_AMI'],
     InstanceInitiatedShutdownBehavior='stop',
-    InstanceType='t3.micro',
+    InstanceType='t3.nano',  # nano: 2vCPU, 0.5gb, $0.0052/hr = $3.74/mo
     KeyName=CONFIG['FUSEBOX_SSH_KEY_NAME'],
     # LaunchTemplate=,
     Monitoring=False,
@@ -165,23 +164,15 @@ FuseboxEIP = t.add_resource(ec2.EIP(
     'FuseboxEIP',
     InstanceId=Ref(FuseboxEC2Instance),
     Domain='vpc',
-    DependsOn=Ref(FuseboxVPC)
+    DependsOn=[FuseboxVPC],
 ))
 
 ###
 # Route 53
 ###
-HostedZone = t.add_resource(route53.HostedZone(
-    'HostedZone',
-    Name=CONFIG['DOMAIN_NAME'],
-    HostedZoneConfig=route53.HostedZoneConfiguration(
-        Comment=f'{CONFIG["STACK_NAME"]} stack HostedZone'
-    ),
-))
-
 t.add_resource(route53.RecordSetGroup(
     'FuseboxRecordSetGroup',
-    HostedZoneId=Ref(HostedZone),
+    HostedZoneId=CONFIG['HOSTED_ZONE_ID'],
     RecordSets=[route53.RecordSet(
         'HostedZoneAliasToFusebox',
         Name=f'{CONFIG["DOMAIN_NAME"]}.',
@@ -198,9 +189,6 @@ StorageBucket = t.add_resource(s3.Bucket(
     'StorageBucket',
     BucketName=StorageBucketName,
     DeletionPolicy='Retain',
-    # LoggingConfiguration=s3.LoggingConfiguration(
-    #     LogFilePrefix='s3-server-access-logs/'
-    # ),
     AccessControl="Private",
     VersioningConfiguration=s3.VersioningConfiguration(
         Status='Enabled'
